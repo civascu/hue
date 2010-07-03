@@ -17,10 +17,107 @@
 ---
 description: Creates instances of HtmlTable for any table with the css class .ccs-data_table with additional options for sortability and selectability.
 provides: [CCS.JFrame.HtmlTable]
-requires: [/CCS.JFrame, More/HtmlTable.Sort, More/HtmlTable.Zebra, More/HtmlTable.Select]
+requires: [/CCS.JFrame, More/HtmlTable.Sort, More/HtmlTable.Zebra, More/HtmlTable.Select, /Element.Data]
 script: CCS.JFrame.HtmlTable.js
 
 ...
+*/
+
+//The newHash here is used to attach these parsers at the beginning of the HtmlTable.Parsers hash.  Otherwise, anything that begins with a number is picked up by the 'number' parser, which is not what we want.
+newHash = new Hash();
+//A parser to allow numeric sorting by any value.
+newHash.dataSortValue = {
+        match: /data-sort-value/,
+        convert: function() {
+                text = this.getElement('[data-sort-value]').get('data', 'sort-value');
+                return text.toInt();
+        },
+        number: true
+};
+//A parser to allow lexicographical sorting by any string.
+newHash.dataSortString = {
+        match: /data-sort-string/,
+        convert: function() {
+                text = this.getElement('[data-sort-string]').get('data', 'sort-string');
+                return text;
+        },
+        number: false 
+};
+//A parser to parse filesizes as defined by the Django 'filesizeformat' filter.
+newHash.filesize = {
+                match: /\d+\.?\d*\s(bytes|(K|M|G|T|P)B)/,
+                convert: function() {
+                        text = this.get('text');
+                        match = text.match(/\d+\.?\d*\s(bytes|(K|M|G|T|P)B)/)[0];
+                        split = match.split(" ", 2);
+                        value = split[0];
+                        units = split[1];
+                        exponent = 0;
+                        switch (units) {
+                                case 'bytes': 
+                                        exponent = 0; 
+                                        break;
+                                case 'KB': 
+                                        exponent = 1; 
+                                        break;
+                                case 'MB': 
+                                        exponent = 2; 
+                                        break;
+                                case 'GB': 
+                                        exponent = 3; 
+                                        break;
+                                case 'TB': 
+                                        exponent = 4;
+                                        break;
+                                case 'PB': 
+                                        exponent = 5;
+                                        break;
+                        }
+                        sortValue = value * Math.pow(1024, exponent);
+                        return sortValue;
+                },
+                number: true
+        };
+
+newHash.combine(HtmlTable.Parsers);
+HtmlTable.Parsers = newHash;
+
+
+
+/*
+HtmlTable.Parsers.filesize = {
+                match: /\d+[^\d.,]*\s(bytes|(K|M|G|T|P)B)/,
+                convert: function() {
+                        text = this.get('text');
+                        split = text.split(" ", 2);
+                        value = split[0];
+                        units = split[1];
+                        exponent = 0;
+                        switch (units) {
+                                case 'bytes': 
+                                        exponent = 0; 
+                                        break;
+                                case 'KB': 
+                                        exponent = 1; 
+                                        break;
+                                case 'MB': 
+                                        exponent = 2; 
+                                        break;
+                                case 'GB': 
+                                        exponent = 3; 
+                                        break;
+                                case 'TB': 
+                                        exponent = 4;
+                                        break;
+                                case 'PB': 
+                                        exponent = 5;
+                                        break;
+                        }
+                        sortValue = value * Math.pow(1024, exponent);
+                        return sortValue;
+                },
+                number: true
+        };
 */
 
 CCS.JFrame.addGlobalFilters({
@@ -72,3 +169,7 @@ CCS.JFrame.addGlobalFilters({
 	}
 
 });
+
+
+
+
