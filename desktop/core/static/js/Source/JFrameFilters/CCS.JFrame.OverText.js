@@ -17,7 +17,7 @@
 ---
 description: Sets up all inputs with the css class .overtext to have an OverText instance for inline labeling. The OverText label element inherits all the classes assigned to the input (at run time) with an "OverText-" prefix, allowing you to style OverText labels on a per-input basis.
 provides: [CCS.JFrame.OverText]
-requires: [/CCS.JFrame, More/OverText]
+requires: [/CCS.JFrame]
 script: CCS.JFrame.OverText.js
 
 ...
