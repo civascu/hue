@@ -24,8 +24,6 @@ script: CCS.JFrame.Input.js
 */
 (function(){
 
-var re = /ccs-search|ccs-input/;
-
 CCS.JFrame.addGlobalFilters({
 
 	artInputs: function(container) {

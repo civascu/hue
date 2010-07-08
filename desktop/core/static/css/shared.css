@@ -482,7 +482,7 @@ Takes a multi-select box and makes it so you can click to move elements from a s
 	background: url(/static/art/info.png);
 }
 
-.ccs-search, .ccs-input {
+*[data-filters*=OverText] {
 	display: none;
 }
 
