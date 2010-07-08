@@ -32,6 +32,7 @@ requires:
  - More/Spinner
  - Widgets/Behavior
  - Widgets/Behavior.OverText
+ - Widgets/Behavior.ArtInput
  - /CCS
  - /CCS.ContextMenu
 script: CCS.JFrame.js
@@ -72,7 +73,10 @@ CCS.JFrame = new Class({
 		useSpinner: true,
 		//linkers: a key/value set of linkers (see the addLinker method for docs)
 		linkers: {},
+		//filters: a key/value set of JFrame filters
 		filters: {},
+		//behaviors: a key/value set of behavior filters passed along to Behavior.addFilters
+		behaviors: {},
 		//the selector to match clicks against for delegation; defaults to only links
 		clickRelays: 'a',
 		//given the response and response text, this method determines if there's been a serverside error
@@ -97,11 +101,11 @@ CCS.JFrame = new Class({
 		new ART.Keyboard(this, this.keyboardOptions);
 		this.addLinkers(this.options.linkers);
 		this.addFilters(this.options.filters);
+
 		this.behavior = new Behavior(this.element);
-		
 		this.addEvent('resize', this.behavior.resize.bind(this.behavior));
-		
 		this.addBehaviors(this.options.behaviors);
+
 		this.element.addClass('jframe_wrapper').addClass('ccs-shared');
 		this.scroller = new Fx.Scroll(this.options.getScroller.call(this));
 		this.content = new Element('div', {
