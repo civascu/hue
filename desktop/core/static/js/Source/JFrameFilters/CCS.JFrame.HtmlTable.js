@@ -43,42 +43,6 @@ newHash.dataSortString = {
         },
         number: false 
 };
-//A parser to parse filesizes as defined by the Django 'filesizeformat' filter.
-newHash.filesize = {
-                match: /\d+\.?\d*\s(bytes|(K|M|G|T|P)B)/,
-                convert: function() {
-                        text = this.get('text');
-                        match = text.match(/\d+\.?\d*\s(bytes|(K|M|G|T|P)B)/)[0];
-                        split = match.split(" ", 2);
-                        value = split[0];
-                        units = split[1];
-                        exponent = 0;
-                        switch (units) {
-                                case 'bytes': 
-                                        exponent = 0; 
-                                        break;
-                                case 'KB': 
-                                        exponent = 1; 
-                                        break;
-                                case 'MB': 
-                                        exponent = 2; 
-                                        break;
-                                case 'GB': 
-                                        exponent = 3; 
-                                        break;
-                                case 'TB': 
-                                        exponent = 4;
-                                        break;
-                                case 'PB': 
-                                        exponent = 5;
-                                        break;
-                        }
-                        sortValue = value * Math.pow(1024, exponent);
-                        return sortValue;
-                },
-                number: true
-        };
-
 newHash.combine(HtmlTable.Parsers);
 HtmlTable.Parsers = newHash;
 
