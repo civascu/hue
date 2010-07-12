@@ -17,7 +17,7 @@
 
 """
 A tool to manage Hue applications. This does not stop/restart a
-running Desktop instance.
+running Hue instance.
 
 Usage:
     %(PROG_NAME)s [flags] --install <path_to_app> [<path_to_app> ...]
@@ -30,7 +30,7 @@ Usage:
         To list all registered applications.
 
     %(PROG_NAME)s [flags] --sync
-        Synchronize all registered applications with the Desktop environment.
+        Synchronize all registered applications with the Hue environment.
         Useful after a `make clean'.
 
 Optional flags:
@@ -84,7 +84,9 @@ def get_app_info(app_loc):
   save_cwd = os.getcwd()
   os.chdir(app_loc)
   try:
-    cmdv = [ common.ENV_PYTHON, 'setup.py', '--name', '--version', '--description' ]
+    cmdv = [ common.ENV_PYTHON, 'setup.py',
+             '--name', '--version', '--description',
+             '--author' ]
     LOG.debug("Running '%s'" % (' '.join(cmdv),))
     popen = subprocess.Popen(cmdv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     res = popen.wait()
@@ -94,7 +96,7 @@ def get_app_info(app_loc):
       LOG.error("Error getting application info from %s:\n%s" % (app_loc, stderr))
       raise OSError(stderr)
     LOG.debug("Command output:\n<<<\n%s\n>>>" % (stdout,))
-    return stdout.split('\n')[:3]
+    return stdout.split('\n')[:4]
   finally:
     os.chdir(save_cwd)
 
@@ -104,16 +106,16 @@ def _do_install_one(reg, app_loc):
   LOG.info("=== Installing app at %s" % (app_loc,))
   try:
     app_loc = os.path.realpath(app_loc)
-    app_name, version, desc = get_app_info(app_loc)
+    app_name, version, desc, author = get_app_info(app_loc)
   except (ValueError, OSError), ex:
     LOG.error(ex)
     return False
 
-  app = registry.DesktopApp(app_name, version, app_loc, desc)
+  app = registry.HueApp(app_name, version, app_loc, desc, author)
   if reg.contains(app):
     LOG.warn("=== %s is already installed" % (app,))
     return True
-  return reg.register(app) and build.make_app(app)
+  return reg.register(app) and build.make_app(app) and app.install_conf()
 
 
 def do_install(app_loc_list):
@@ -131,10 +133,10 @@ def do_list():
   """List all apps. Returns True/False."""
   reg = registry.AppRegistry()
   apps = reg.get_all_apps()
-  LOG.info("%-20s %-7s %s" % ('Name', 'Version', 'Path'))
-  LOG.info("%s %s %s" % ('-' * 20, '-' * 7, '-' * 50))
+  LOG.info("%-18s %-7s %-15s %s" % ('Name', 'Version', 'Author', 'Path'))
+  LOG.info("%s %s %s %s" % ('-' * 18, '-' * 7, '-' * 15, '-' * 35))
   for app in sorted(apps):
-    LOG.info("%-20s %-7s %s" % (app.name, app.version, app.path))
+    LOG.info("%-18s %-7s %-15s %s" % (app.name, app.version, app.author, app.path))
   return True
 
 
@@ -150,6 +152,7 @@ def do_remove(app_name):
     LOG.error("%s is not installed" % (app_name,))
     return False
 
+  app.uninstall_conf()
   reg.save()
 
   # Update the pth file
