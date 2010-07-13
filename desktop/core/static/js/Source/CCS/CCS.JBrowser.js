@@ -84,12 +84,9 @@ script: CCS.JBrowser.js
 			var show = $pick(options.showNow, true);
 			options.showNow = false;
 			this.parent(options);
-			this._setupHistory(path);
-			if (show) {
-				this.options.showNow = true;
-				this.show();
-			}
+                        this._setupHistory(path);
 			this._makeJFrame(path);
+                        if (show) this.options.showNow = true;
 			if (Browser.Engine.trident) {
 				$(this).setStyle('top', -111111111);
 			} else {
@@ -216,6 +213,7 @@ script: CCS.JBrowser.js
 		},
 
 		_jframeLoaded: function(data) {
+                        //if (this.options.showNow) this.show();
 			if (!Browser.Engine.trident) {
 				(function(){
 					$(this).setStyle('visibility', 'visible');
