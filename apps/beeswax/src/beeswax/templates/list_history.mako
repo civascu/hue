@@ -77,7 +77,7 @@ ${wrappers.head("Beeswax: Query History", section='history')}
   </div>
 
   <h3 class="ccs-hidden">Query History:</h3>
-  <table class="ccs-data_table selectable" cellpadding="0" cellspacing="0">
+  <table data-filters="HtmlTable" class="selectable" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
         <th>Time</th>

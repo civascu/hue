@@ -33,7 +33,7 @@ ${wrappers.head("Beeswax: My Queries", section='my queries')}
 
     <ul class="ccs-tab_sections ccs-clear">
       <li>
-        <table class="ccs-data_table selectable" cellpadding="0" cellspacing="0">
+        <table data-filters="HtmlTable" class="selectable" cellpadding="0" cellspacing="0">
           <thead>
             <tr>
               <th colspan="2">Name</th>
@@ -96,7 +96,7 @@ ${wrappers.head("Beeswax: My Queries", section='my queries')}
         ##
         ## ----------------- My history -------------------
         ##
-        <table class="ccs-data_table selectable" cellpadding="0" cellspacing="0">
+        <table data-filters="HtmlTable" class="selectable" cellpadding="0" cellspacing="0">
           <thead>
             <tr>
               <th>Time</th>

@@ -26,7 +26,7 @@ from django.template.defaultfilters import urlencode, stringformat, filesizeform
   ${_table(files, path_enc, current_request_path, 'view', cwd_set)}
 </%def>
 <%def name="_table(files, path_enc, current_request_path, view, cwd_set=False)">
-  <table class="ccs-data_table fb-file-list selectable sortable" cellpadding="0" cellspacing="0">
+  <table data-filters="HtmlTable" class="fb-file-list selectable sortable" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
         % if cwd_set:

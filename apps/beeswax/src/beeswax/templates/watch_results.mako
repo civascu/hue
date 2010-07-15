@@ -114,7 +114,7 @@ ${wrappers.head("Beeswax: Query Results", section='query')}
               % if expected_first_row != start_row:
                 <div class="bw-result_warning">Warning:</i> Page offset may have incremented since last view.</div>
               % endif
-              <table class="ccs-data_table" cellpadding="0" cellspacing="0">
+              <table data-filters="HtmlTable" cellpadding="0" cellspacing="0">
                 <thead>
                   <tr>
                     <th>-</th>
