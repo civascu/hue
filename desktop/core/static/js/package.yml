@@ -65,5 +65,8 @@ sources: [
   Source/UI/ART.SideBySideSelect.js,
   Source/BehaviorFilters/Behavior.FitText.js,
   Source/BehaviorFilters/Behavior.SideBySideSelect.js,
+  Source/BehaviorFilters/Behavior.SizeTo.js,
+  Source/BehaviorFilters/Behavior.HtmlTableKeys.js,
+  Source/BehaviorFilters/Behavior.ContextMenu.js
 ]
 version: Unknown
