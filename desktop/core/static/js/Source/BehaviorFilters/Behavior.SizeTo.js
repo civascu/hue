@@ -16,14 +16,14 @@
 /*
 ---
 description: Allows an element to be sized to the dimensions of the jframe portion of the window.
-provides: [CCS.JFrame.SizeTo]
-requires: [/CCS.JFrame, /Element.Data]
-script: CCS.JFrame.SizeTo.js
+provides: [Behavior.SizeTo]
+requires: [/Element.Data]
+script: Behavior.SizeTo.js
 
 ...
 */
 
-CCS.JFrame.addGlobalFilters({
+Behavior.addGlobalFilters({
 
 	/*
 		elements are given data properties for data-size-to-height or data-size-to-width
@@ -34,13 +34,21 @@ CCS.JFrame.addGlobalFilters({
 		will size that div to the height of the window -100 pixels. The value must always
 		be a number. Use zero for 100% height/width.
 	*/
-	sizeTo: function(container) {
-		container.getElements('[data-size-to-width], [data-size-to-height]').each(function(element) {
-		        if(!element.hasDataFilter('SizeTo')){
-                                dbug.warn('you are using a deprecated JFrame filter (data-size-to) on %o, use the SizeTo data-filter instead.', element);
-                                element.addDataFilter('SizeTo');
-                        }
-                }, this);
+	SizeTo: function(element, events) {
+                var sizeTo = {
+                        x: element.get('data', 'size-to-width'),
+                        y: element.get('data', 'size-to-height')
+                };
+                resize = function(x, y){
+                        if (sizeTo.x) element.setStyle('width', x + sizeTo.x.toInt());
+                        if (sizeTo.y) element.setStyle('height', y + sizeTo.y.toInt());
+                };
+                size = events.getCurrentJFrameSize();
+		resize(size.x, size.y);
+                events.addEvent('resize', resize);
+		this.markForCleanup(function(){
+			events.removeEvent('resize', resize);
+		});
 	}
 
 });
