@@ -34,8 +34,13 @@ requires:
  - Widgets/Behavior.OverText
  - Widgets/Behavior.ArtInput
  - Widgets/Behavior.ArtButton
+ - Widgets/Behavior.HtmlTable
+ - Widgets/Behavior.SplitView
  - /Behavior.SideBySideSelect
  - /Behavior.FitText
+ - /Behavior.SizeTo
+ - /Behavior.HtmlTableKeys
+ - /Behavior.ContextMenu
  - /CCS
  - /CCS.ContextMenu
 script: CCS.JFrame.js
@@ -106,7 +111,8 @@ CCS.JFrame = new Class({
 		this.addFilters(this.options.filters);
 
 		this.behavior = new Behavior(this.element);
-		['attachKeys', 'detachKeys', 'addShortcut', 'addShortcuts', 'removeShortcut', 'removeShortcuts', 'applyDelegates'].each(function(method){
+                if(this.options.size) this.behavior.resize(this.options.size.width, this.options.size.height);
+                ['attachKeys', 'detachKeys', 'addShortcut', 'addShortcuts', 'removeShortcut', 'removeShortcuts', 'applyDelegates', 'getContentElement', 'load'].each(function(method){
 			this.behavior.passMethod(method, this[method].bind(this));
 		}, this);
 		this.addEvent('resize', this.behavior.resize.bind(this.behavior));
@@ -342,6 +348,10 @@ CCS.JFrame = new Class({
 		this.fireEvent('resize', [x, y]);
 	},
 	
+        getContentElement: function(){
+                return this.getWindow().contents;
+        },
+
 	filters: {},
 
 	/*
